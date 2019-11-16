@@ -51,7 +51,7 @@
     </div>
 
 	<div>
-        <div id="Position" class="Position">
+        <div id="PositionSection" class="Position">
         </div>
 
 		<table id="board" draggable="false"></table>	
@@ -73,8 +73,6 @@
 
         var y = document.getElementById("yDimension");
         var height = y.options[y.selectedIndex].value;
-
-        // if (!isNaN(width) || !isNaN(height) ) { return; }
 
         let tableHTML = "";
 
@@ -146,7 +144,7 @@
     }
 
     function displayPosition() {
-        let positionSection = document.getElementById("Position");
+        let positionSection = document.getElementById("PositionSection");
         positionSection.innerHTML = "";
 
         var result = position.getCurrentPosition();
@@ -162,7 +160,6 @@
                 ${result.orientation}
             </div>
         `
-        positionSection = document.getElementById("Position");
         positionSection.innerHTML = positionHTML;
     }
 
