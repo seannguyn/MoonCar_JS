@@ -104,12 +104,12 @@
         var height = yDimension.options[yDimension.selectedIndex].value;
 
         let yPositionOption = ""; 
-        for (let y = 1; y < height; y++) {
+        for (let y = 1; y <= height; y++) {
             yPositionOption += `<option value=${y}>${y}</option>`;
         }
 
         let xPositionOption = ""; 
-        for (let x = 1; x < width; x++) {
+        for (let x = 1; x <= width; x++) {
             xPositionOption += `<option value=${x}>${x}</option>`;
         }
 
