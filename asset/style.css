@@ -46,6 +46,21 @@ body {
     line-height: 60px; 
 }
 
+.PositionBlock {
+    height: 40px; width: 40px; 
+    color: black; 
+    border-radius: 5px; 
+    display: inline-block; 
+    text-align: center;
+    vertical-align: middle;
+    line-height: 60px; 
+}
+
 #MoveButtonRow {
     display: none;
+}
+
+.Position {
+	display: table; 
+    margin: 2% auto;
 }

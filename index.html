@@ -49,7 +49,11 @@
             Right
         </div>
     </div>
+
 	<div>
+        <div id="Position" class="Position">
+        </div>
+
 		<table id="board" draggable="false"></table>	
 	</div>
 </body>
@@ -74,10 +78,10 @@
 
         let tableHTML = "";
 
-        for (let r = height-1; r >= 0; r--) {
+        for (let r = height; r >= 0; r--) {
             let currentArrayRow = [];
             let currentHTMLRow = `<tr draggable="false" id="row ${r}">`;
-            for (let c = 0; c < width; c++) {
+            for (let c = 0; c <= width; c++) {
                 let newNodeId = `${c}-${r}`;
 
                 currentHTMLRow += `<td draggable="false" id="${newNodeId}" class="Unvisited"></td>`;
@@ -87,10 +91,11 @@
         let board = document.getElementById("board");
         board.innerHTML = tableHTML;
 
-        position = new Position(0,0,NORTH,width-1,height-1);
+        position = new Position(0,0,NORTH,width,height);
         drawCar(position.getCurrentPosition());
 
         displayOption();
+        displayPosition();
     }
 
     function displayOption() {
@@ -140,6 +145,27 @@
         document.getElementById("MoveButtonRow").style.display = "inline";
     }
 
+    function displayPosition() {
+        let positionSection = document.getElementById("Position");
+        positionSection.innerHTML = "";
+
+        var result = position.getCurrentPosition();
+        let positionHTML=
+        `
+            <div class="PositionBlock">
+                ${result.xPos}
+            </div>
+            <div class="PositionBlock">
+                ${result.yPos}
+            </div>
+            <div class="PositionBlock">
+                ${result.orientation}
+            </div>
+        `
+        positionSection = document.getElementById("Position");
+        positionSection.innerHTML = positionHTML;
+    }
+
     function place() {
         var x = document.getElementById("xPosition");
         var xPosition = x.options[x.selectedIndex].value;
@@ -151,25 +177,29 @@
         var orientation = ori.options[ori.selectedIndex].value;
 
         var result = position.place(xPosition, yPosition, orientation);
-        
+
+        displayPosition();
         drawCar(result)
     }
 
     function move() {
         var result = position.move();
-        
+
+        displayPosition();
         drawCar(result)
     }
 
     function left() {
         var result = position.left();
-        
+
+        displayPosition();
         drawCar(result)
     }
 
     function right() {
         var result = position.right();
-        
+
+        displayPosition();
         drawCar(result)
     }
 
