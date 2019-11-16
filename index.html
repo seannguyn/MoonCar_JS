@@ -35,9 +35,19 @@
             <button onClick="draw();" class="btn btn-primary">Draw Landscape</button>
         </div>
     </div>
+
+    
+
     <div id="OrientationOption" class="form-row">
+    </div>
+
+
+    
+    <div id="CommandInput" class="form-row">
         
     </div>
+
+
     <div id="MoveButtonRow">
         <div class="MoveButton" onClick="move()">
             Move
@@ -49,6 +59,12 @@
             Right
         </div>
     </div>
+
+
+    
+
+
+
 
 	<div>
         <div id="PositionSection" class="Position">
@@ -94,6 +110,7 @@
 
         displayOption();
         displayPosition();
+        displayCommandInput();
     }
 
     function displayOption() {
@@ -161,6 +178,43 @@
             </div>
         `
         positionSection.innerHTML = positionHTML;
+    }
+
+    function displayCommandInput() {
+        let positionSection = document.getElementById("CommandInput");
+        positionSection.innerHTML = 
+        `
+        <div class="form-group col-md-3">
+            <input type="text" class="form-control" id="MovementCommand" placeholder="Only: M,R,L is allowed">
+        </div>
+        
+        <div class="form-group col-md-2">
+            <button class="btn btn-primary mb-2" onClick="runCommand();">Run Command</button>
+        </div>
+        `;
+    }
+
+    function runCommand() {
+        let commands = document.getElementById("MovementCommand").value.split("");
+
+        for (var i = 0; i < commands.length; i++) {
+            switch(commands[i]) {
+                case "M":
+                    move()
+                    break;
+
+                case "R":
+                    right();
+                    break;
+
+                case "L":
+                    left();
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
     function place() {
