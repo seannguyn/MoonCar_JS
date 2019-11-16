@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>MoonCar</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="./asset/style.css">
+
+</head>
+  
+<body draggable="false">
+    <div class="form-row">
+        <div class="form-group col-sm-1">
+            <select id="xDimension" class="form-control">
+                <option value=5 selected>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-1">
+            <select id="yDimension" class="form-control">
+                <option value=5 selected>5</option>
+                <option value=6>6</option>
+                <option value=7>7</option>
+                <option value=8>8</option>
+                <option value=9>9</option>
+                <option value=10>10</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <button onClick="draw();" class="btn btn-primary">Draw Landscape</button>
+        </div>
+    </div>
+    <div id="OrientationOption" class="form-row">
+        
+    </div>
+    <div id="MoveButtonRow">
+        <div class="MoveButton" onClick="move()">
+            Move
+        </div>
+        <div class="MoveButton" onClick="left()">
+            Left
+        </div>
+        <div class="MoveButton" onClick="right()">
+            Right
+        </div>
+    </div>
+	<div>
+		<table id="board" draggable="false"></table>	
+	</div>
+</body>
+<script src="./Position.js"></script>
+<script type="text/javascript">
+
+    var position;
+
+    const NORTH="NORTH";
+    const SOUTH="SOUTH";
+    const WEST="WEST";
+    const EAST="EAST";
+
+    function draw() {
+        var x = document.getElementById("xDimension");
+        var width = x.options[x.selectedIndex].value;
+
+        var y = document.getElementById("yDimension");
+        var height = y.options[y.selectedIndex].value;
+
+        // if (!isNaN(width) || !isNaN(height) ) { return; }
+
+        let tableHTML = "";
+
+        for (let r = height-1; r >= 0; r--) {
+            let currentArrayRow = [];
+            let currentHTMLRow = `<tr draggable="false" id="row ${r}">`;
+            for (let c = 0; c < width; c++) {
+                let newNodeId = `${c}-${r}`;
+
+                currentHTMLRow += `<td draggable="false" id="${newNodeId}" class="Unvisited"></td>`;
+            }
+            tableHTML += `${currentHTMLRow}</tr>`;
+        }	
+        let board = document.getElementById("board");
+        board.innerHTML = tableHTML;
+
+        position = new Position(0,0,NORTH,width-1,height-1);
+        drawCar(position.getCurrentPosition());
+
+        displayOption();
+    }
+
+    function displayOption() {
+
+        var xDimension = document.getElementById("xDimension")
+        var yDimension = document.getElementById("yDimension")
+        var width = xDimension.options[xDimension.selectedIndex].value;
+        var height = yDimension.options[yDimension.selectedIndex].value;
+
+        let yPositionOption = ""; 
+        for (let y = 1; y < height; y++) {
+            yPositionOption += `<option value=${y}>${y}</option>`;
+        }
+
+        let xPositionOption = ""; 
+        for (let x = 1; x < width; x++) {
+            xPositionOption += `<option value=${x}>${x}</option>`;
+        }
+
+        let OrientationOptionHTML=
+        `<div class="form-group col-sm-1">
+            <select id="xPosition" class="form-control">
+                <option value=0 selected>0</option>
+                ${xPositionOption}
+            </select>
+        </div>
+        <div class="form-group col-sm-1">
+            <select id="yPosition" class="form-control">
+                <option value=0 selected>0</option>
+                ${yPositionOption}
+            </select>
+        </div>
+        <div class="form-group col-sm-1">
+            <select id="orientation" class="form-control">
+                <option selected>NORTH</option>
+                <option>SOUTH</option>
+                <option>EAST</option>
+                <option>WEST</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <button onClick="place()" class="btn btn-primary">Place car</button>
+        </div>`
+        let OrientationOption = document.getElementById("OrientationOption");
+        OrientationOption.innerHTML = OrientationOptionHTML;
+
+        document.getElementById("MoveButtonRow").style.display = "inline";
+    }
+
+    function place() {
+        var x = document.getElementById("xPosition");
+        var xPosition = x.options[x.selectedIndex].value;
+
+        var y = document.getElementById("yPosition");
+        var yPosition = y.options[y.selectedIndex].value;
+
+        var ori = document.getElementById("orientation");
+        var orientation = ori.options[ori.selectedIndex].value;
+
+        var result = position.place(xPosition, yPosition, orientation);
+        
+        drawCar(result)
+    }
+
+    function move() {
+        var result = position.move();
+        
+        drawCar(result)
+    }
+
+    function left() {
+        var result = position.left();
+        
+        drawCar(result)
+    }
+
+    function right() {
+        var result = position.right();
+        
+        drawCar(result)
+    }
+
+    function drawCar(newPosition) {
+        var prevCell = `${newPosition.xPosPrev}-${newPosition.yPosPrev}`;
+        let prevElement = document.getElementById(prevCell);
+        prevElement.innerHTML = "";
+        
+        var currCell = `${newPosition.xPos}-${newPosition.yPos}`;
+        let currElement = document.getElementById(currCell);
+
+        switch(newPosition.orientation) {
+            case NORTH:
+                currElement.innerHTML = `<img src="./asset/${NORTH}.svg"/>`; 
+                break;
+            case SOUTH:
+                currElement.innerHTML = `<img src="./asset/${SOUTH}.svg"/>`;
+                break;
+            case EAST:
+                currElement.innerHTML = `<img src="./asset/${EAST}.svg"/>`;
+                break;
+            case WEST:
+                currElement.innerHTML = `<img src="./asset/${WEST}.svg"/>`;
+                break;
+        }
+    }
+</script>
